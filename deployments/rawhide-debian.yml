@@ -1,0 +1,31 @@
+apiVersion: actions.summerwind.dev/v1alpha1
+kind: RunnerDeployment
+metadata:
+  name: rawhide-debian
+  namespace: runners
+spec:
+  replicas: 2
+  template:
+    spec:
+      enterprise: ENTERPRISE-NAME-HERE
+      image: docker.GHE-HOSTNAME-HERE/goobernetes/debian-runner:latest
+      imagePullPolicy: Always
+      imagePullSecrets:
+        - name: ghe
+      dockerdWithinRunnerContainer: true
+      dockerMTU: 1450
+      resources:
+        limits:
+          cpu: "4000m"
+          memory: "8Gi"
+        requests:
+          cpu: "200m"
+          memory: "200Mi"
+      volumeMounts:
+      - mountPath: /runner
+        name: runner
+      volumes:
+      - name: runner
+        emptyDir: {}
+      labels:
+      - rawhide-debian

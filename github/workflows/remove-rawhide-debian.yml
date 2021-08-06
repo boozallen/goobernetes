@@ -1,0 +1,26 @@
+name: Rawhide - remove Debian Buster deployment
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Remove the rawhide Debian Buster deployment
+    runs-on: [ buster ]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      
+      - name: Write out the kubeconfig info
+        run: | 
+          echo ${{ secrets.PROD_RUNNER_DEPLOY }} | base64 -d > /tmp/config
+
+      - name: Deploy
+        run: |
+          kubectl delete -f runners/rawhide-debian.yml
+        env:
+          KUBECONFIG: /tmp/config
+
+      - name: Remove kubeconfig info
+        run: rm -f /tmp/config

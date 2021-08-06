@@ -1,0 +1,51 @@
+apiVersion: actions.summerwind.dev/v1alpha1
+kind: RunnerDeployment
+metadata:
+  name: ubuntu-runners
+  namespace: runners
+spec:
+  replicas: 6
+  template:
+    spec:
+      enterprise: ENTERPRISE-NAME-HERE
+      image: docker.GHE-HOSTNAME-HERE/goobernetes/ubuntu-runner:latest
+      imagePullPolicy: Always
+      imagePullSecrets:
+        - name: ghe
+      dockerdWithinRunnerContainer: true
+      dockerMTU: 1450
+      resources:
+        limits:
+          cpu: "4000m"
+          memory: "8Gi"
+        requests:
+          cpu: "200m"
+          memory: "200Mi"
+      volumeMounts:
+      - mountPath: /runner
+        name: runner
+      volumes:
+      - name: runner
+        emptyDir: {}
+      labels:
+      - docker
+      - ubuntu
+      - focal
+      - ubuntu-latest
+---
+apiVersion: actions.summerwind.dev/v1alpha1
+kind: HorizontalRunnerAutoscaler
+metadata:
+  name: ubuntu-runners-autoscaling
+spec:
+  scaleTargetRef:
+    name: ubuntu-runners
+  minReplicas: 2
+  maxReplicas: 6
+  scaleDownDelaySecondsAfterScaleOut: 60
+  metrics:
+  - type: PercentageRunnersBusy
+    scaleUpThreshold: '0.75'
+    scaleDownThreshold: '0.3'
+    scaleUpFactor: '1.5'
+    scaleDownFactor: '0.7'

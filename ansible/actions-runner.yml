@@ -1,0 +1,161 @@
+---
+- name: Set up Kubernetes cluster member
+  gather_facts: True
+  # Commented out because there's no reason to re-run this on the controller
+  # hosts: kubeworkers:kubecontrol
+  hosts: kubeworkers
+  become: True
+  become_user: root
+  become_method: sudo
+  tasks:
+
+  - name: Enable the extras and optional repos (RHEL)
+    community.general.rhsm_repository:
+      name: [ 'rhel-7-server-extras-rpms', 'rhel-7-server-optional-rpms' ]
+      state: enabled
+    when: ansible_distribution == "RedHat"
+
+  - name: Set up the EPEL repo
+    yum_repository:
+      name: epel
+      description: EPEL YUM repo
+      baseurl: https://download.fedoraproject.org/pub/epel/$releasever/$basearch/
+
+  - name: Install miscellaneous software
+    yum:
+      state: latest
+      pkg:
+        - vim
+        - wget
+        - git
+        - yum-utils
+        - device-mapper-persistent-data
+        - lvm2
+        - open-vm-tools
+
+  - name: Set up the repo for Docker CE
+    get_url:
+      url: https://download.docker.com/linux/centos/docker-ce.repo
+      dest: /etc/yum.repos.d/dockerce.repo
+      owner: root
+      group: root
+      mode: '0644'
+
+  - name: Install Docker CE
+    yum:
+      state: latest
+      pkg: docker-ce
+
+  - name: Enable and start the Docker service
+    systemd:
+      name: docker
+      state: started
+      enabled: yes
+
+  - name: Configure the runner local account
+    user:
+      name: runner
+      state: present
+      groups: docker
+
+  - name: Turn off SELinux
+    shell: |
+      setenforce 0
+
+  - name: Disable SELinux
+    selinux:
+      policy: targeted
+      state: permissive
+
+  - name: Turn off swap
+    shell: |
+      swapoff -a
+
+  - name: Disable swap
+    replace:
+      path: /etc/fstab
+      regexp: '^([^#].*?\sswap\s+sw\s+.*)$'
+      replace: '# \1'
+
+  - name: Turn on iptables for bridged traffic (IPv6)
+    sysctl:
+      name: net.bridge.bridge-nf-call-ip6tables
+      value: '1'
+      sysctl_set: yes
+      state: present
+      reload: yes
+
+  - name: Turn on iptables for bridged traffic (IPv4)
+    sysctl:
+      name: net.bridge.bridge-nf-call-iptables
+      value: '1'
+      sysctl_set: yes
+      state: present
+      reload: yes
+
+  - name: Turn off and disable firewalld
+    systemd:
+      name: firewalld
+      state: stopped
+      enabled: no
+
+  - name: Enable the Kubernetes repository
+    yum_repository:
+      name: kubernetes
+      description: Kubernetes
+      enabled: true
+      gpgcheck: true
+      repo_gpgcheck: true
+      baseurl: https://packages.cloud.google.com/yum/repos/kubernetes-el7-\$basearch
+      gpgkey: "https://packages.cloud.google.com/yum/doc/yum-key.gpg\nhttps://packages.cloud.google.com/yum/doc/rpm-package-key.gpg"
+
+  - name: Add Kubernetes GPG keys (1 of 2)
+    rpm_key:
+      key: https://packages.cloud.google.com/yum/doc/yum-key.gpg
+      state: present
+
+  - name: Add Kubernetes GPG keys (2 of 2)
+    rpm_key:
+      key: https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+      state: present
+
+  - name: Install Kubernetes packages
+    yum:
+      state: latest
+      pkg:
+        - kubelet
+        - kubeadm
+        - kubectl
+
+  - name: Enable and start the kubelet service
+    systemd:
+      name: kubelet
+      state: started
+      enabled: yes
+
+- name: Get the join command from the controller
+  hosts: kubecontrol
+  become: True
+  become_user: runner
+  become_method: sudo
+  tasks:
+
+    - name: Make the token
+      shell: kubeadm token create --print-join-command
+      register: join_command_raw
+
+    - name: Set join command
+      set_fact:
+        join_command: "{{ join_command_raw.stdout_lines[0] }}"
+
+- name: Join the worker to the controller
+  hosts: kubeworkers
+  become: True
+  become_user: runner
+  become_method: sudo
+  tasks:
+    - name: Join cluster
+      shell: "{{ hostvars['kubecontrol'].join_command }} >> node_joined.txt"
+      args:
+        chdir: $HOME
+        creates: node_joined.txt

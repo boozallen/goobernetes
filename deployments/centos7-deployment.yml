@@ -1,0 +1,49 @@
+apiVersion: actions.summerwind.dev/v1alpha1
+kind: RunnerDeployment
+metadata:
+  name: centos7-runners
+  namespace: runners
+spec:
+  replicas: 2
+  template:
+    spec:
+      enterprise: ENTERPRISE-NAME-HERE
+      image: docker.GHE-HOSTNAME-HERE/goobernetes/centos7-runner:latest
+      imagePullPolicy: Always
+      imagePullSecrets:
+        - name: ghe
+      dockerdWithinRunnerContainer: true
+      dockerMTU: 1450
+      resources:
+        limits:
+          cpu: "4000m"
+          memory: "8Gi"
+        requests:
+          cpu: "200m"
+          memory: "200Mi"
+      volumeMounts:
+      - mountPath: /runner
+        name: runner
+      volumes:
+      - name: runner
+        emptyDir: {}
+      labels:
+      - docker
+      - centos7
+---
+apiVersion: actions.summerwind.dev/v1alpha1
+kind: HorizontalRunnerAutoscaler
+metadata:
+  name: centos7-runners-autoscaling
+spec:
+  scaleTargetRef:
+    name: centos7-runners
+  minReplicas: 2
+  maxReplicas: 6
+  scaleDownDelaySecondsAfterScaleOut: 60
+  metrics:
+  - type: PercentageRunnersBusy
+    scaleUpThreshold: '0.75'
+    scaleDownThreshold: '0.3'
+    scaleUpFactor: '1.5'
+    scaleDownFactor: '0.7'

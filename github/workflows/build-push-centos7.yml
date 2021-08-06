@@ -1,0 +1,37 @@
+name: Build and push CentOS 7 runner
+
+on:
+  push:
+    branches:
+    - main
+    paths:
+    - 'images/centos7.Dockerfile'
+    - '.github/workflows/**-centos7.yml'
+    - 'images/**.sh'
+    - 'images/docker/*'
+    - 'images/patched/*'
+    - 'images/software/*'
+    - 'images/supervisor/*'
+
+jobs:
+  build:
+    runs-on: [ centos7 ]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Login to GitHub Packages
+        uses: docker/login-action@v1
+        with:
+          registry: docker.${{ secrets.GHE_HOSTNAME }}
+          username: ${{ secrets.GHE_USERNAME }}
+          password: ${{ secrets.GHE_TOKEN }}
+
+      - name: Build the image
+        run: |
+          cd images
+          docker build --network=host --file centos7.Dockerfile --tag docker.${{ secrets.GHE_HOSTNAME }}/goobernetes/centos7-runner:latest .
+
+      - name: Push to GitHub Packages
+        run: docker push docker.${{ secrets.GHE_HOSTNAME }}/goobernetes/centos7-runner:latest
