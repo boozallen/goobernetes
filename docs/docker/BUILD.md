@@ -30,5 +30,7 @@ If you'd like to build these manually on your own laptop, it's pretty straightfo
 
 ```shell
 cd images/
+docker login docker.your-ghe-url
 docker build -f image-name.Dockerfile -t tag-goes-here .
+docker push tag-goes-here
 ```
