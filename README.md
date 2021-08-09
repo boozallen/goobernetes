@@ -39,7 +39,7 @@ The Dockerfiles and all of the other software needed for each are in the [images
 
 The most visible part of the configuration for deploying these runners is in the [deployments](deployments) directory.  This directory only contains YAML files used to define the runner deployment.  Things you'll find here are how much resources are allotted to any given worker, how the controller scales that deployment, etc.
 
-Lastly, the [workflows](.github/workflows) directory provides the CI/CD pipeline for building, testing, and deploying the images.  Of course we're going to use GitHub to build GitHub! :tada:
+Lastly, the [workflows](github/workflows) directory provides the CI/CD pipeline for building, testing, and deploying the images.  Of course we're going to use GitHub to build GitHub! :tada:
 
 ## How-to docs, next steps, and FAQs
 
