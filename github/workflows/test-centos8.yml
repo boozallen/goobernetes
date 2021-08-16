@@ -1,0 +1,104 @@
+name: Test CentOS 8 runner
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+    - main
+    paths:
+    - 'images/centos8.Dockerfile'
+    - '.github/workflows/**-centos7.yml'
+    - 'images/**.sh'
+    - 'images/docker/*'
+    - 'images/patched/*'
+    - 'images/software/*'
+    - 'images/supervisor/*'
+
+jobs:
+  build:
+    name: Build test image
+    runs-on: [ centos8 ]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Login to GitHub Packages
+        uses: docker/login-action@v1
+        with:
+          registry: docker.${{ secrets.GHE_HOSTNAME }}
+          username: ${{ secrets.GHE_USERNAME }}
+          password: ${{ secrets.GHE_TOKEN }}
+
+      - name: Build the image
+        run: |
+          cd images
+          docker build --network=host --file centos8.Dockerfile --tag docker.${{ secrets.GHE_HOSTNAME }}/goobernetes/centos8-runner:latest .
+
+      - name: Push to GitHub Packages
+        run: docker push docker.${{ secrets.GHE_HOSTNAME }}/goobernetes/centos8-runner:latest
+
+
+  deploy:
+    name: Deploy test image to `test-runners` namespace
+    runs-on: [ centos8 ]
+    needs: [ build ]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      
+      - name: Write out the kubeconfig info
+        run: | 
+          echo ${{ secrets.TEST_RUNNER_ACCOUNT }} | base64 -d > /tmp/config
+
+      - name: Deploy
+        run: |
+          kubectl apply -f deployments/test-centos8-deployment.yml
+        env:
+          KUBECONFIG: /tmp/config
+
+      - name: Remove kubeconfig info
+        run: rm -f /tmp/config
+      
+      - name: Wait 5 minutes to let the new pod come up
+        run: sleep 300
+        
+  
+  test:
+    name: Run tests!
+    runs-on: [ test-centos8 ]
+    needs: [ deploy ]
+
+    steps:
+      - name: Sudo test
+        run: sudo echo "sudo is working"
+      
+      - name: Docker test
+        run: | 
+          docker run hello-world
+          docker network inspect bridge
+          docker info
+  
+  remove-deploy:
+    name: Delete test image deployment
+    runs-on: [ centos8 ]
+    needs: [ test ]
+    if: always()
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      
+      - name: Write out the kubeconfig info
+        run: | 
+          echo ${{ secrets.TEST_RUNNER_ACCOUNT }} | base64 -d > /tmp/config
+
+      - name: Deploy
+        run: |
+          kubectl delete -f deployments/test-centos8-deployment.yml
+        env:
+          KUBECONFIG: /tmp/config
+
+      - name: Remove kubeconfig info
+        run: rm -f /tmp/config
