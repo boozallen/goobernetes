@@ -53,7 +53,7 @@ jobs:
 
       - name: Deploy
         run: |
-          kubectl apply -f runners/test-ubuntu-deployment.yml
+          kubectl apply -f deployments/test-ubuntu-deployment.yml
         env:
           KUBECONFIG: /tmp/config
 
@@ -95,7 +95,7 @@ jobs:
 
       - name: Deploy
         run: |
-          kubectl delete -f runners/test-ubuntu-deployment.yml
+          kubectl delete -f deployments/test-ubuntu-deployment.yml
         env:
           KUBECONFIG: /tmp/config
 

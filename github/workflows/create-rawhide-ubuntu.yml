@@ -18,7 +18,7 @@ jobs:
 
       - name: Deploy
         run: |
-          kubectl apply -f runners/rawhide-ubuntu.yml
+          kubectl apply -f deployments/rawhide-ubuntu.yml
         env:
           KUBECONFIG: /tmp/config
 

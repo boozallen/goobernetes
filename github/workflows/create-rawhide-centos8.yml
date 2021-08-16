@@ -1,12 +1,12 @@
-name: Rawhide - create Debian Buster deployment
+name: Rawhide - create CentOS 8 deployment
 
 on:
   workflow_dispatch:
 
 jobs:
   deploy:
-    name: Create the rawhide Debian Buster deployment
-    runs-on: [ buster ]
+    name: Create the rawhide CentOS 8 deployment
+    runs-on: [ centos8 ]
 
     steps:
       - name: Checkout
@@ -18,7 +18,7 @@ jobs:
 
       - name: Deploy
         run: |
-          kubectl apply -f deployments/rawhide-debian.yml
+          kubectl apply -f deployments/rawhide-centos8.yml
         env:
           KUBECONFIG: /tmp/config
 
