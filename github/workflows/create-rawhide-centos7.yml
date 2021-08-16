@@ -18,7 +18,7 @@ jobs:
 
       - name: Deploy
         run: |
-          kubectl apply -f runners/rawhide-centos7.yml
+          kubectl apply -f deployments/rawhide-centos7.yml
         env:
           KUBECONFIG: /tmp/config
 

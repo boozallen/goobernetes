@@ -18,7 +18,7 @@ jobs:
 
       - name: Deploy
         run: |
-          kubectl apply -f runners/rawhide-debian.yml
+          kubectl apply -f deployments/rawhide-debian.yml
         env:
           KUBECONFIG: /tmp/config
 

@@ -18,7 +18,7 @@ jobs:
 
       - name: Deploy
         run: |
-          kubectl delete -f runners/rawhide-debian.yml
+          kubectl delete -f deployments/rawhide-debian.yml
         env:
           KUBECONFIG: /tmp/config
 

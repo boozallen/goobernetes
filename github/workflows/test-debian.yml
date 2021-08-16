@@ -53,7 +53,7 @@ jobs:
 
       - name: Deploy
         run: |
-          kubectl apply -f runners/test-debian-deployment.yml
+          kubectl apply -f deployments/test-debian-deployment.yml
         env:
           KUBECONFIG: /tmp/config
 
@@ -95,7 +95,7 @@ jobs:
 
       - name: Deploy
         run: |
-          kubectl delete -f runners/test-debian-deployment.yml
+          kubectl delete -f deployments/test-debian-deployment.yml
         env:
           KUBECONFIG: /tmp/config
 
