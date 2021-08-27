@@ -1,14 +1,14 @@
 apiVersion: actions.summerwind.dev/v1alpha1
 kind: RunnerDeployment
 metadata:
-  name: debian-runners
+  name: centos8
   namespace: runners
 spec:
   replicas: 2
   template:
     spec:
       enterprise: ENTERPRISE-NAME-HERE
-      image: docker.GHE-HOSTNAME-HERE/goobernetes/debian-runner:latest
+      image: docker.GHE-HOSTNAME-HERE/goobernetes/centos8:latest
       imagePullPolicy: Always
       imagePullSecrets:
         - name: ghe
@@ -29,17 +29,15 @@ spec:
         emptyDir: {}
       labels:
       - docker
-      - debian
-      - buster
-      - debian-latest
+      - centos8
 ---
 apiVersion: actions.summerwind.dev/v1alpha1
 kind: HorizontalRunnerAutoscaler
 metadata:
-  name: debian-runners-autoscaling
+  name: centos8-autoscaling
 spec:
   scaleTargetRef:
-    name: debian-runners
+    name: centos8
   minReplicas: 2
   maxReplicas: 6
   scaleDownDelaySecondsAfterScaleOut: 60

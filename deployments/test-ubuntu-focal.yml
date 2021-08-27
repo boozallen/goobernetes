@@ -1,14 +1,14 @@
 apiVersion: actions.summerwind.dev/v1alpha1
 kind: RunnerDeployment
 metadata:
-  name: rawhide-debian
-  namespace: runners
+  name: test-ubuntu-focal
+  namespace: test-runners
 spec:
-  replicas: 2
+  replicas: 1
   template:
     spec:
       enterprise: ENTERPRISE-NAME-HERE
-      image: docker.GHE-HOSTNAME-HERE/goobernetes/debian-runner:latest
+      image: docker.GHE-HOSTNAME-HERE/goobernetes/ubuntu-focal-test:latest
       imagePullPolicy: Always
       imagePullSecrets:
         - name: ghe
@@ -16,8 +16,8 @@ spec:
       dockerMTU: 1450
       resources:
         limits:
-          cpu: "4000m"
-          memory: "8Gi"
+          cpu: "2000m"
+          memory: "4Gi"
         requests:
           cpu: "200m"
           memory: "200Mi"
@@ -28,4 +28,4 @@ spec:
       - name: runner
         emptyDir: {}
       labels:
-      - rawhide-debian
+      - test-ubuntu-focal

@@ -1,14 +1,14 @@
 apiVersion: actions.summerwind.dev/v1alpha1
 kind: RunnerDeployment
 metadata:
-  name: test-ubuntu
+  name: test-debian-buster
   namespace: test-runners
 spec:
   replicas: 1
   template:
     spec:
       enterprise: ENTERPRISE-NAME-HERE
-      image: docker.GHE-HOSTNAME-HERE/goobernetes/ubuntu-test:latest
+      image: docker.GHE-HOSTNAME-HERE/goobernetes/debian-buster-test:latest
       imagePullPolicy: Always
       imagePullSecrets:
         - name: ghe
@@ -28,4 +28,4 @@ spec:
       - name: runner
         emptyDir: {}
       labels:
-      - test-ubuntu
+      - test-debian-buster

@@ -8,7 +8,7 @@ spec:
   template:
     spec:
       enterprise: ENTERPRISE-NAME-HERE
-      image: docker.GHE-HOSTNAME-HERE/goobernetes/centos7-runner:latest
+      image: docker.GHE-HOSTNAME-HERE/goobernetes/centos7:latest
       imagePullPolicy: Always
       imagePullSecrets:
         - name: ghe
