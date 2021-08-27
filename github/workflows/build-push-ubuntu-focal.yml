@@ -1,12 +1,12 @@
-name: Build and push Debian Buster runner
+name: Build and push Ubuntu Focal runner
 
 on:
   push:
     branches:
     - main
     paths:
-    - 'images/debian-buster.Dockerfile'
-    - '.github/workflows/**-debian.yml'
+    - 'images/ubuntu-focal.Dockerfile'
+    - '.github/workflows/**-focal.yml'
     - 'images/**.sh'
     - 'images/docker/*'
     - 'images/patched/*'
@@ -15,7 +15,7 @@ on:
 
 jobs:
   build:
-    runs-on: [ buster ]
+    runs-on: [ focal ]
 
     steps:
       - name: Checkout
@@ -31,7 +31,7 @@ jobs:
       - name: Build the image
         run: |
           cd images
-          docker build --network=host --file debian-buster.Dockerfile --tag docker.${{ secrets.GHE_HOSTNAME }}/goobernetes/debian-runner:latest .
+          docker build --network=host --file ubuntu-focal.Dockerfile --tag docker.${{ secrets.GHE_HOSTNAME }}/goobernetes/ubuntu-focal:latest .
 
       - name: Push to GitHub Packages
-        run: docker push docker.${{ secrets.GHE_HOSTNAME }}/goobernetes/debian-runner:latest
+        run: docker push docker.${{ secrets.GHE_HOSTNAME }}/goobernetes/ubuntu-focal:latest

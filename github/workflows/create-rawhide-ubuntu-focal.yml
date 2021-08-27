@@ -1,12 +1,12 @@
-name: Rawhide - remove Debian Buster deployment
+name: Rawhide - create Ubuntu Focal deployment
 
 on:
   workflow_dispatch:
 
 jobs:
   deploy:
-    name: Remove the rawhide Debian Buster deployment
-    runs-on: [ buster ]
+    name: Create the rawhide Ubuntu Focal deployment
+    runs-on: [ focal ]
 
     steps:
       - name: Checkout
@@ -18,9 +18,12 @@ jobs:
 
       - name: Deploy
         run: |
-          kubectl delete -f deployments/rawhide-debian.yml
+          kubectl apply -f deployments/rawhide-ubuntu-focal.yml
         env:
           KUBECONFIG: /tmp/config
 
       - name: Remove kubeconfig info
         run: rm -f /tmp/config
+      
+      - name: Wait 5 minutes to let the new pods come up
+        run: sleep 300

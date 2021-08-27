@@ -1,11 +1,11 @@
-name: Rawhide - create Debian Buster deployment
+name: Rawhide - remove Debian Buster deployment
 
 on:
   workflow_dispatch:
 
 jobs:
   deploy:
-    name: Create the rawhide Debian Buster deployment
+    name: Remove the rawhide Debian Buster deployment
     runs-on: [ buster ]
 
     steps:
@@ -18,12 +18,9 @@ jobs:
 
       - name: Deploy
         run: |
-          kubectl apply -f deployments/rawhide-debian.yml
+          kubectl delete -f deployments/rawhide-debian-buster.yml
         env:
           KUBECONFIG: /tmp/config
 
       - name: Remove kubeconfig info
         run: rm -f /tmp/config
-      
-      - name: Wait 5 minutes to let the new pods come up
-        run: sleep 300

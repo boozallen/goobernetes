@@ -1,4 +1,4 @@
-name: Test Debian Buster runner
+name: Test Ubuntu Focal runner
 
 on:
   workflow_dispatch:
@@ -6,8 +6,8 @@ on:
     branches:
     - main
     paths:
-    - 'images/debian-buster.Dockerfile'
-    - '.github/workflows/**-debian.yml'
+    - 'images/ubuntu-focal.Dockerfile'
+    - '.github/workflows/**-focal.yml'
     - 'images/**.sh'
     - 'images/docker/*'
     - 'images/patched/*'
@@ -17,7 +17,7 @@ on:
 jobs:
   build:
     name: Build test image
-    runs-on: [ buster ]
+    runs-on: [ focal ]
 
     steps:
       - name: Checkout
@@ -33,14 +33,14 @@ jobs:
       - name: Build the image
         run: |
           cd images
-          docker build --network=host --file debian-buster.Dockerfile --tag docker.${{ secrets.GHE_HOSTNAME }}/goobernetes/debian-test:latest .
+          docker build --network=host --file ubuntu-focal.Dockerfile --tag docker.${{ secrets.GHE_HOSTNAME }}/goobernetes/ubuntu-focal-test:latest .
 
       - name: Push to GitHub Packages
-        run: docker push docker.${{ secrets.GHE_HOSTNAME }}/goobernetes/debian-test:latest
-
+        run: docker push docker.${{ secrets.GHE_HOSTNAME }}/goobernetes/ubuntu-focal-test:latest
+  
   deploy:
     name: Deploy test image to `test-runners` namespace
-    runs-on: [ buster ]
+    runs-on: [ focal ]
     needs: [ build ]
 
     steps:
@@ -53,7 +53,7 @@ jobs:
 
       - name: Deploy
         run: |
-          kubectl apply -f deployments/test-debian-deployment.yml
+          kubectl apply -f deployments/test-ubuntu-focal.yml
         env:
           KUBECONFIG: /tmp/config
 
@@ -66,7 +66,7 @@ jobs:
   
   test:
     name: Run tests!
-    runs-on: [ test-debian ]
+    runs-on: [ test-ubuntu ]
     needs: [ deploy ]
 
     steps:
@@ -78,10 +78,10 @@ jobs:
           docker run hello-world
           docker network inspect bridge
           docker info
-
+  
   remove-deploy:
     name: Delete test image deployment
-    runs-on: [ buster ]
+    runs-on: [ focal ]
     needs: [ test ]
     if: always()
 
@@ -95,7 +95,7 @@ jobs:
 
       - name: Deploy
         run: |
-          kubectl delete -f deployments/test-debian-deployment.yml
+          kubectl delete -f deployments/test-ubuntu-focal.yml
         env:
           KUBECONFIG: /tmp/config
 
