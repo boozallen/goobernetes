@@ -29,10 +29,11 @@ The next building block is the Kubernetes applications.  Here's some quick facts
 - [Actions Runner Controller](https://github.com/actions-runner-controller/actions-runner-controller) is what actually connects to GitHub Enterprise Server and manages/scales the runners.
 - [Helm](https://helm.sh/) is how all of the deployments are managed.
 
-The next part of this solution is the Docker images used as runners.  These are what gets deployed as pods for GitHub to use.  There are currently four versions we've created, listed below:
+The next part of this solution is the Docker images used as runners.  These are what gets deployed as pods for GitHub to use.  There are currently five versions we've created, listed below:
 
 - Ubuntu 20.04 (focal)
 - Debian 10 (buster)
+- Debian 11 (bullseye)
 - CentOS 7 (centos7)
 - CentOS 8 (centos8)
 

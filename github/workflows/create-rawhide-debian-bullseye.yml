@@ -1,0 +1,29 @@
+name: Rawhide - create Debian Bullseye deployment
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Create the rawhide Debian Bullseye deployment
+    runs-on: [ bullseye ]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      
+      - name: Write out the kubeconfig info
+        run: | 
+          echo ${{ secrets.PROD_RUNNER_DEPLOY }} | base64 -d > /tmp/config
+
+      - name: Deploy
+        run: |
+          kubectl apply -f deployments/rawhide-debian-bullseye.yml
+        env:
+          KUBECONFIG: /tmp/config
+
+      - name: Remove kubeconfig info
+        run: rm -f /tmp/config
+      
+      - name: Wait 5 minutes to let the new pods come up
+        run: sleep 300
