@@ -6,7 +6,7 @@ on:
     - main
     paths:
     - 'images/centos8.Dockerfile'
-    - '.github/workflows/**-centos7.yml'
+    - '.github/workflows/**-centos8.yml'
     - 'images/**.sh'
     - 'images/docker/*'
     - 'images/patched/*'

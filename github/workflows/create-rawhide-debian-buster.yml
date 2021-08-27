@@ -1,12 +1,12 @@
-name: Rawhide - create Ubuntu Focal deployment
+name: Rawhide - create Debian Buster deployment
 
 on:
   workflow_dispatch:
 
 jobs:
   deploy:
-    name: Create the rawhide Ubuntu Focal deployment
-    runs-on: [ focal ]
+    name: Create the rawhide Debian Buster deployment
+    runs-on: [ buster ]
 
     steps:
       - name: Checkout
@@ -18,7 +18,7 @@ jobs:
 
       - name: Deploy
         run: |
-          kubectl apply -f deployments/rawhide-ubuntu.yml
+          kubectl apply -f deployments/rawhide-debian-buster.yml
         env:
           KUBECONFIG: /tmp/config
 

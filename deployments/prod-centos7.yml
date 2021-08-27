@@ -1,14 +1,14 @@
 apiVersion: actions.summerwind.dev/v1alpha1
 kind: RunnerDeployment
 metadata:
-  name: centos7-runners
+  name: centos7
   namespace: runners
 spec:
   replicas: 2
   template:
     spec:
       enterprise: ENTERPRISE-NAME-HERE
-      image: docker.GHE-HOSTNAME-HERE/goobernetes/centos7-runner:latest
+      image: docker.GHE-HOSTNAME-HERE/goobernetes/centos7:latest
       imagePullPolicy: Always
       imagePullSecrets:
         - name: ghe
@@ -34,10 +34,10 @@ spec:
 apiVersion: actions.summerwind.dev/v1alpha1
 kind: HorizontalRunnerAutoscaler
 metadata:
-  name: centos7-runners-autoscaling
+  name: centos7-autoscaling
 spec:
   scaleTargetRef:
-    name: centos7-runners
+    name: centos7
   minReplicas: 2
   maxReplicas: 6
   scaleDownDelaySecondsAfterScaleOut: 60

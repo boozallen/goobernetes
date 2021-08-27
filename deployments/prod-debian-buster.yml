@@ -1,14 +1,14 @@
 apiVersion: actions.summerwind.dev/v1alpha1
 kind: RunnerDeployment
 metadata:
-  name: rawhide-ubuntu
+  name: debian-buster
   namespace: runners
 spec:
   replicas: 2
   template:
     spec:
       enterprise: ENTERPRISE-NAME-HERE
-      image: docker.GHE-HOSTNAME-HERE/goobernetes/ubuntu-runner:latest
+      image: docker.GHE-HOSTNAME-HERE/goobernetes/debian-buster:latest
       imagePullPolicy: Always
       imagePullSecrets:
         - name: ghe
@@ -28,4 +28,23 @@ spec:
       - name: runner
         emptyDir: {}
       labels:
-      - rawhide-ubuntu
+      - docker
+      - debian
+      - buster
+---
+apiVersion: actions.summerwind.dev/v1alpha1
+kind: HorizontalRunnerAutoscaler
+metadata:
+  name: debian-buster-autoscaling
+spec:
+  scaleTargetRef:
+    name: debian-buster
+  minReplicas: 2
+  maxReplicas: 6
+  scaleDownDelaySecondsAfterScaleOut: 60
+  metrics:
+  - type: PercentageRunnersBusy
+    scaleUpThreshold: '0.75'
+    scaleDownThreshold: '0.3'
+    scaleUpFactor: '1.5'
+    scaleDownFactor: '0.7'

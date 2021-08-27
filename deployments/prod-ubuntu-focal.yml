@@ -1,14 +1,14 @@
 apiVersion: actions.summerwind.dev/v1alpha1
 kind: RunnerDeployment
 metadata:
-  name: centos8-runners
+  name: ubuntu-focal
   namespace: runners
 spec:
-  replicas: 2
+  replicas: 6
   template:
     spec:
       enterprise: ENTERPRISE-NAME-HERE
-      image: docker.GHE-HOSTNAME-HERE/goobernetes/centos8-runner:latest
+      image: docker.GHE-HOSTNAME-HERE/goobernetes/ubuntu-focal:latest
       imagePullPolicy: Always
       imagePullSecrets:
         - name: ghe
@@ -29,15 +29,17 @@ spec:
         emptyDir: {}
       labels:
       - docker
-      - centos8
+      - ubuntu
+      - focal
+      - ubuntu-latest
 ---
 apiVersion: actions.summerwind.dev/v1alpha1
 kind: HorizontalRunnerAutoscaler
 metadata:
-  name: centos8-runners-autoscaling
+  name: ubuntu-focal-autoscaling
 spec:
   scaleTargetRef:
-    name: centos8-runners
+    name: ubuntu-focal
   minReplicas: 2
   maxReplicas: 6
   scaleDownDelaySecondsAfterScaleOut: 60

@@ -18,7 +18,7 @@ jobs:
 
       - name: Deploy
         run: |
-          kubectl delete -f deployments/rawhide-ubuntu.yml
+          kubectl delete -f deployments/rawhide-ubuntu-focal.yml
         env:
           KUBECONFIG: /tmp/config
 

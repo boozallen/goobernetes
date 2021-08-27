@@ -7,7 +7,7 @@ on:
     - main
     paths:
     - 'images/centos8.Dockerfile'
-    - '.github/workflows/**-centos7.yml'
+    - '.github/workflows/**-centos8.yml'
     - 'images/**.sh'
     - 'images/docker/*'
     - 'images/patched/*'
@@ -33,10 +33,10 @@ jobs:
       - name: Build the image
         run: |
           cd images
-          docker build --network=host --file centos8.Dockerfile --tag docker.${{ secrets.GHE_HOSTNAME }}/goobernetes/centos8-runner:latest .
+          docker build --network=host --file centos8.Dockerfile --tag docker.${{ secrets.GHE_HOSTNAME }}/goobernetes/centos8-test:latest .
 
       - name: Push to GitHub Packages
-        run: docker push docker.${{ secrets.GHE_HOSTNAME }}/goobernetes/centos8-runner:latest
+        run: docker push docker.${{ secrets.GHE_HOSTNAME }}/goobernetes/centos8-test:latest
 
 
   deploy:
@@ -54,7 +54,7 @@ jobs:
 
       - name: Deploy
         run: |
-          kubectl apply -f deployments/test-centos8-deployment.yml
+          kubectl apply -f deployments/test-centos8.yml
         env:
           KUBECONFIG: /tmp/config
 
@@ -96,7 +96,7 @@ jobs:
 
       - name: Deploy
         run: |
-          kubectl delete -f deployments/test-centos8-deployment.yml
+          kubectl delete -f deployments/test-centos8.yml
         env:
           KUBECONFIG: /tmp/config
 
