@@ -1,4 +1,4 @@
-name: Test Debian Buster runner
+name: Test Debian Bullseye runner
 
 on:
   workflow_dispatch:
@@ -6,8 +6,8 @@ on:
     branches:
     - main
     paths:
-    - 'images/debian-buster.Dockerfile'
-    - '.github/workflows/**-buster.yml'
+    - 'images/debian-bullseye.Dockerfile'
+    - '.github/workflows/**-bullseye.yml'
     - 'images/**.sh'
     - 'images/docker/*'
     - 'images/patched/*'
@@ -17,7 +17,7 @@ on:
 jobs:
   build:
     name: Build test image
-    runs-on: [ buster ]
+    runs-on: [ bullseye ]
 
     steps:
       - name: Checkout
@@ -33,14 +33,14 @@ jobs:
       - name: Build the image
         run: |
           cd images
-          docker build --network=host --file debian-buster.Dockerfile --tag docker.${{ secrets.GHE_HOSTNAME }}/goobernetes/debian-buster-test:latest .
+          docker build --network=host --file debian-bullseye.Dockerfile --tag docker.${{ secrets.GHE_HOSTNAME }}/goobernetes/debian-bullseye-test:latest .
 
       - name: Push to GitHub Packages
-        run: docker push docker.${{ secrets.GHE_HOSTNAME }}/goobernetes/debian-buster-test:latest
+        run: docker push docker.${{ secrets.GHE_HOSTNAME }}/goobernetes/debian-bullseye-test:latest
 
   deploy:
     name: Deploy test image to `test-runners` namespace
-    runs-on: [ buster ]
+    runs-on: [ bullseye ]
     needs: [ build ]
 
     steps:
@@ -53,7 +53,7 @@ jobs:
 
       - name: Deploy
         run: |
-          kubectl apply -f deployments/test-debian-buster.yml
+          kubectl apply -f deployments/test-debian-bullseye.yml
         env:
           KUBECONFIG: /tmp/config
 
@@ -66,7 +66,7 @@ jobs:
   
   test:
     name: Run tests!
-    runs-on: [ test-debian-buster ]
+    runs-on: [ test-debian-bullseye ]
     needs: [ deploy ]
 
     steps:
@@ -81,7 +81,7 @@ jobs:
 
   remove-deploy:
     name: Delete test image deployment
-    runs-on: [ buster ]
+    runs-on: [ bullseye ]
     needs: [ test ]
     if: always()
 
@@ -95,7 +95,7 @@ jobs:
 
       - name: Deploy
         run: |
-          kubectl delete -f deployments/test-debian-buster.yml
+          kubectl delete -f deployments/test-debian-bullseye.yml
         env:
           KUBECONFIG: /tmp/config
 

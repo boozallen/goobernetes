@@ -1,0 +1,31 @@
+apiVersion: actions.summerwind.dev/v1alpha1
+kind: RunnerDeployment
+metadata:
+  name: test-debian-bullseye
+  namespace: test-runners
+spec:
+  replicas: 1
+  template:
+    spec:
+      enterprise: ENTERPRISE-NAME-HERE
+      image: docker.GHE-HOSTNAME-HERE/goobernetes/debian-bullseye-test:latest
+      imagePullPolicy: Always
+      imagePullSecrets:
+        - name: ghe
+      dockerdWithinRunnerContainer: true
+      dockerMTU: 1450
+      resources:
+        limits:
+          cpu: "2000m"
+          memory: "4Gi"
+        requests:
+          cpu: "200m"
+          memory: "200Mi"
+      volumeMounts:
+      - mountPath: /runner
+        name: runner
+      volumes:
+      - name: runner
+        emptyDir: {}
+      labels:
+      - test-debian-bullseye
