@@ -82,7 +82,7 @@ RUN apt-get autoclean && apt-get autoremove
 
 # Runner agent and Docker configs
 ARG TARGETPLATFORM=linux/amd64
-ARG RUNNER_VERSION=2.280.2
+ARG RUNNER_VERSION=2.281.0
 ARG DOCKER_CHANNEL=stable
 ARG DOCKER_VERSION=20.10.8
 ARG COMPOSE_VERSION=1.29.2
