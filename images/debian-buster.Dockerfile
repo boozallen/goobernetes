@@ -83,7 +83,7 @@ COPY software/kubectl.sh kubectl.sh
 RUN bash kubectl.sh && rm kubectl.sh
 
 ARG TARGETPLATFORM=linux/amd64
-ARG RUNNER_VERSION=2.281.0
+ARG RUNNER_VERSION=2.281.1
 ARG DOCKER_CHANNEL=stable
 ARG DOCKER_VERSION=20.10.8
 ARG COMPOSE_VERSION=1.29.2
