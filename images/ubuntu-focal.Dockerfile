@@ -27,14 +27,10 @@ RUN apt-get update \
     locales \
     lsb-release \
     netcat \
-    nodejs \
-    npm \
     openssh-client \
     openssl \
     parallel \
     pkg-config \
-    python3 \
-    python3-pip \
     rsync \
     shellcheck \
     sudo \
@@ -82,7 +78,7 @@ RUN apt-get autoclean && apt-get autoremove
 
 # Runner agent and Docker configs
 ARG TARGETPLATFORM=linux/amd64
-ARG RUNNER_VERSION=2.281.1
+ARG RUNNER_VERSION=2.282.0
 ARG DOCKER_CHANNEL=stable
 ARG DOCKER_VERSION=20.10.8
 ARG COMPOSE_VERSION=1.29.2
