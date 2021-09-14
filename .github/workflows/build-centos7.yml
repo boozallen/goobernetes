@@ -2,7 +2,7 @@ name: Build and publish CentOS 7 runner
 
 on:
   schedule:
-    cron: '15 3 * * 0'  # build once a week unless needed to more frequently
+    - cron: '15 3 * * 0'  # build once a week unless needed to more frequently
   workflow_dispatch:
   push:
     branches:
