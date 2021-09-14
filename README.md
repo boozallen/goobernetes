@@ -43,6 +43,10 @@ The most visible part of the configuration for deploying these runners is in the
 
 Lastly, the [workflows](github/workflows) directory provides the CI/CD pipeline for building, testing, and deploying the images.  Of course we're going to use GitHub to build GitHub! :tada:
 
+## I just want the images to use
+
+Neat!  Look at the packages to the right to download the latest image.  They're built monthly and on pull request against the `main` branch.
+
 ## How-to docs, next steps, and FAQs
 
 - [Cluster setup](docs/kubernetes/SETUP.md)

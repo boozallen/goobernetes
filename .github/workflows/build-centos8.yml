@@ -1,4 +1,4 @@
-name: Build and publish CentOS 7 runner
+name: Build and publish CentOS 8 runner
 
 on:
   schedule:
@@ -8,8 +8,8 @@ on:
     branches:
     - main
     paths:
-    - 'images/centos7.Dockerfile'
-    - '.github/workflows/**-centos7.yml'
+    - 'images/centos8.Dockerfile'
+    - '.github/workflows/**-centos8.yml'
     - 'images/**.sh'
     - 'images/docker/*'
     - 'images/patched/*'
@@ -34,7 +34,7 @@ jobs:
       - name: Build the image
         run: |
           cd images
-          docker build --network=host --file centos7.Dockerfile --tag ghcr.io/boozallen/goobernetes/centos7-runner:latest .
+          docker build --network=host --file centos8.Dockerfile --tag ghcr.io/boozallen/goobernetes/centos8-runner:latest .
 
-      - name: Push to GitHub Container Registry
-        run: docker push ghcr.io/boozallen/goobernetes/centos7-runner:latest
+      - name: Push to GitHub Packages
+        run: docker push ghcr.io/boozallen/goobernetes/centos8-runner:latest
