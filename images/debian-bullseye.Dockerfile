@@ -38,16 +38,12 @@ RUN apt-get update \
     musl-dev \
     nasm \
     netcat \
-    nodejs \
-    npm \
     openssh-client \
     openssl \
     optipng \
     parallel \
     pkg-config \
     pngquant \
-    python3 \
-    python3-pip \
     rsync \
     shellcheck \
     sudo \
@@ -83,7 +79,7 @@ COPY software/kubectl.sh kubectl.sh
 RUN bash kubectl.sh && rm kubectl.sh
 
 ARG TARGETPLATFORM=linux/amd64
-ARG RUNNER_VERSION=2.281.1
+ARG RUNNER_VERSION=2.282.0
 ARG DOCKER_CHANNEL=stable
 ARG DOCKER_VERSION=20.10.8
 ARG COMPOSE_VERSION=1.29.2
