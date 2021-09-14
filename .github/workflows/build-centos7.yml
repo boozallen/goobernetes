@@ -1,0 +1,40 @@
+name: Build and publish CentOS 7 runner
+
+on:
+  schedule:
+    cron: '15 3 * * 0'  # build once a week unless needed to more frequently
+  workflow_dispatch:
+  push:
+    branches:
+    - main
+    paths:
+    - 'images/centos7.Dockerfile'
+    - '.github/workflows/**-centos7.yml'
+    - 'images/**.sh'
+    - 'images/docker/*'
+    - 'images/patched/*'
+    - 'images/software/*'
+    - 'images/supervisor/*'
+
+jobs:
+  build:
+    runs-on: [ ubuntu-latest ]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GHCR_TOKEN }}
+
+      - name: Build the image
+        run: |
+          cd images
+          docker build --network=host --file centos7.Dockerfile --tag ghcr.io/boozallen/goobernetes/centos7-runner:latest .
+
+      - name: Push to GitHub Container Registry
+        run: docker push ghcr.io/boozallen/goobernetes/centos7-runner:latest
