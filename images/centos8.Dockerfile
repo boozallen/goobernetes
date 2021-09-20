@@ -46,7 +46,7 @@ COPY software/kubectl.sh kubectl.sh
 RUN bash kubectl.sh && rm kubectl.sh
  
 ARG TARGETPLATFORM=linux/amd64
-ARG RUNNER_VERSION=2.282.0
+ARG RUNNER_VERSION=2.283.0
 ARG DEBUG=false
 
 RUN test -n "$TARGETPLATFORM" || (echo "TARGETPLATFORM must be set" && false)
