@@ -79,6 +79,9 @@ jobs:
           docker network inspect bridge
           docker info
 
+      - name: Print environmental variables
+        run: printenv
+
   remove-deploy:
     name: Delete test image deployment
     runs-on: [ bullseye ]
