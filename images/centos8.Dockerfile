@@ -1,7 +1,12 @@
 FROM centos:8
 
+# Set environment variables needed at build
 ENV PATH /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
+# Copy in environment variables not needed at build
+COPY .env /.env
+
+# Install base software
 RUN yum update -y \
     && yum install dnf-plugins-core -y \
     && yum config-manager --set-enabled powertools \

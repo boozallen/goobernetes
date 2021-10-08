@@ -1,6 +1,10 @@
 FROM debian:buster
 
+# Set environment variables needed at build
 ENV DEBIAN_FRONTEND=noninteractive
+
+# Copy in environment variables not needed at build
+COPY .env /.env
 
 # Install base software
 RUN apt-get update \

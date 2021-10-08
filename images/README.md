@@ -24,3 +24,9 @@ In addition to the folders above, here's a bit about the files in this folder.
 - `logger.sh` - A handy dandy logger script!
 - `modprobe` - Not really modprobe, but kinda needed to let Docker-in-Docker run more reliably.
 - `startup.sh` - The startup script.  It's a bit ugly, but it works.  It relies on supervisord for the Debian-based runners, but if it fails (such as CentOS), it'll try `sudo $process` before failing for good.
+- `.env` - This file gets copied into the container during the build process, then loaded by the entry point script.  Use this to store custom environment variables, such as proxy configurations, caching, mirrors, etc. that you need in your on-premises environment.  It is blank by default as this is a public repository, but here's an example:
+  
+    ```shell
+    HTTP_PROXY=http://USERNAME:PASSWORD@10.0.1.1:8080/
+    HTTPS_PROXY=https://USERNAME:PASSWORD@10.0.0.1:8080/
+    ```
