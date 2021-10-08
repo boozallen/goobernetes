@@ -1,5 +1,10 @@
 #!/bin/bash
 
+if [ -e "/.env" ]; then
+  echo "Adding custom environment variables" 1>&2
+  source /.env
+fi
+
 if [ -z "${GITHUB_URL}" ]; then
   echo "Working with public GitHub" 1>&2
   GITHUB_URL="https://github.com/"
