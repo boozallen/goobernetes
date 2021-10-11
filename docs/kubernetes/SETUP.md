@@ -185,7 +185,7 @@
     kubectl create namespace cert-manager
     helm repo add jetstack https://charts.jetstack.io
     helm repo update
-    helm install cert-manager jetstack/cert-manager --namespace cert-manager --create-namespace --version v1.3.1 --set installCRDs=true
+    helm install cert-manager jetstack/cert-manager --namespace cert-manager --version v1.5.4 --set installCRDs=true
     ```
 
 1. Install and set up the Actions controller (check the version).
@@ -194,7 +194,7 @@
     kubectl create namespace actions-runner-system
     helm repo add actions-runner-controller https://actions-runner-controller.github.io/actions-runner-controller
     helm repo update
-    helm install -n actions-runner-system actions-runner-controller actions-runner-controller/actions-runner-controller --version=0.10.5
+    helm install -n actions-runner-system actions-runner-controller actions-runner-controller/actions-runner-controller --version=0.13.2
     ```
 
 1. Set up the controller to be the GitHub Enterprise Server in the appropriate environment.
