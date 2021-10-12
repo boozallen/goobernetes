@@ -17,3 +17,5 @@ jobs:
       uses: anchore/sbom-action@v0
       with:
         image: ghcr.io/boozallen/goobernetes/ubuntu-focal:latest
+        registry-username: ${{ github.actor }}
+        registry-password: ${{ github.token }}
