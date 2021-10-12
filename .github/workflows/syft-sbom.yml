@@ -1,0 +1,19 @@
+name: Generate SBOM for each image
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    - cron: '35 10 * * 5'
+
+jobs:
+ ubuntu-focal-sbom:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Generate SBOM for Ubuntu Focal
+      uses: anchore/sbom-action@v0
+      with:
+        image: ghcr.io/boozallen/goobernetes/ubuntu-focal:latest
