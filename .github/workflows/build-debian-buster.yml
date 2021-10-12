@@ -36,5 +36,22 @@ jobs:
           cd images
           docker build --network=host --file debian-buster.Dockerfile --tag ghcr.io/boozallen/goobernetes/debian-buster:latest .
 
+      - name: Run the Anchore scan action itself with GitHub Advanced Security code scanning integration enabled
+        uses: anchore/scan-action@main
+        with:
+          image: "ghcr.io/boozallen/goobernetes/debian-buster:latest"
+          fail-build: false
+          acs-report-enable: true
+
+      - name: Upload Anchore Scan Report
+        uses: github/codeql-action/upload-sarif@v1
+        with:
+          sarif_file: results.sarif
+
+      - name: Generate SBOM for the Debian Buster (10) runner
+        uses: anchore/sbom-action@v0
+        with:
+          image: ghcr.io/boozallen/goobernetes/debian-buster:latest
+
       - name: Push to GitHub Packages
         run: docker push ghcr.io/boozallen/goobernetes/debian-buster:latest

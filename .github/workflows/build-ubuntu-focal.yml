@@ -2,7 +2,7 @@ name: Build and publish Ubuntu Focal runner
 
 on:
   schedule:
-    - cron: '15 3 1 * *'  # build once a week unless needed to more frequently
+    - cron: '15 3 1 * *'  # build once a month unless needed to more frequently
   workflow_dispatch:
   push:
     branches:
@@ -35,6 +35,23 @@ jobs:
         run: |
           cd images
           docker build --network=host --file ubuntu-focal.Dockerfile --tag ghcr.io/boozallen/goobernetes/ubuntu-focal:latest .
+
+      - name: Run the Anchore scan action itself with GitHub Advanced Security code scanning integration enabled
+        uses: anchore/scan-action@main
+        with:
+          image: "ghcr.io/boozallen/goobernetes/ubuntu-focal:latest"
+          fail-build: false
+          acs-report-enable: true
+
+      - name: Upload Anchore Scan Report
+        uses: github/codeql-action/upload-sarif@v1
+        with:
+          sarif_file: results.sarif
+
+      - name: Generate SBOM for the Ubuntu Focal (20.04 LTS) runner
+        uses: anchore/sbom-action@v0
+        with:
+          image: ghcr.io/boozallen/goobernetes/ubuntu-focal:latest
 
       - name: Push to GitHub Packages
         run: docker push ghcr.io/boozallen/goobernetes/ubuntu-focal:latest
