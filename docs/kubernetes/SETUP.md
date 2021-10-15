@@ -67,6 +67,14 @@
     sudo usermod -aG docker runner
     ```
 
+1. (all nodes) Change the cgroup driver by creating `/etc/docker/daemon.json` with the following contents:
+
+    ```json
+    {
+        "exec-opts": ["native.cgroupdriver=systemd"]
+    }
+    ```
+
 1. (all nodes) Enable and start the Docker service.
 
     ```shell
