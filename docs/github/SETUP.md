@@ -2,9 +2,9 @@
 
 Here's a (hopefully complete) step-by-step guide to getting this repository and setting this up in a new GHES instance.
 
-1. Clone this repository to your a machine with Docker installed.  We'll need to do the very first set of runners manually, so that GitHub has runners to build its' runners on.  We'll come back to this in a bit.
+1. Clone this repository to a machine with Docker installed.  We'll need to do the very first set of runners manually, so that GitHub has runners to build its' runners on.  We'll come back to this in a bit.
 2. Mirror this repository to your GHES server.  [Directions](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/creating-a-repository-on-github/duplicating-a-repository)
-3. Now let's set up some credentials.  You'll the following:
+3. Now let's set up some credentials.  You'll need the following:
    1. An enterprise admin account with a PAT using the `enterprise:admin` scope.  This is used by the runner controller to control the runners joined to GHES in the setup docs [here](../kubernetes/SETUP.md)
    2. A non-admin account that can read from the repo (or org) where you're going to publish the Docker images to GitHub Packages.  This account needs a PAT with the `read:packages` scope and is used by the runner controller as the image pull secret.  In the setup docs, I called this secret `ghe`.
    3. The [setup docs](../kubernetes/SETUP.md) have you create two namespaces, `runners` and `test-runners`.  There are two service account YAML files, one for each namespace, for GHES to use to deploy itself.  Please apply them using `kubectl apply -f serviceaccount.yml` and copy the `kubeconfig` file for each.  You will need to save it to a text file, then use `cat filename.txt | base64` to base64 encode it.  This big string of gibberish will become the two GitHub Secrets used by the deployment workflows.
@@ -19,7 +19,7 @@ Here's a (hopefully complete) step-by-step guide to getting this repository and 
     docker push tag-goes-here
     ```
 
-6. Next, let's set up the runner controller as outlined [here](../kubernetes/SETUP.md) and use the [deployments](../../deployments/README.md) to create the first set of runners.  Wait a few minutes for the deployment to complete.
+6. Next, let's set up the runner controller as outlined [here](../kubernetes/SETUP.md) and use the [deployments](../../deployments) to create the first set of runners.  You will need to edit them to include your GHE server's hostname, your enterprise name, etc.  Wait a few minutes for the deployment to complete.
 7. Log in to your GHE server and navigate to `HOSTNAME/enterprises/ENTERPRISE-NAME/settings/actions/self-hosted-runners`.  You should now see something like this:
 
     ![self-hosted-runners](../pictures/self-hosted-runners.png)
