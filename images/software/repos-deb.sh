@@ -14,3 +14,5 @@ mv microsoft.gpg /etc/apt/trusted.gpg.d/microsoft.gpg
 
 # Update repository
 apt-get update
+apt-get autoclean
+apt-get autoremove

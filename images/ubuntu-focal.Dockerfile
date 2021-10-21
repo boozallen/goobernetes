@@ -45,7 +45,9 @@ RUN apt-get update \
     upx \
     wget \
     zip \
-    zstd
+    zstd \
+    && apt-get autoclean \
+    && apt-get autoremove
 
 # Runner user
 RUN adduser --disabled-password --gecos "" --uid 1000 runner \
