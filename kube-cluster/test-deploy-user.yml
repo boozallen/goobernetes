@@ -31,7 +31,7 @@ kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: test-user-view
-  namespace: runners
+  namespace: test-runners
 subjects:
 - kind: ServiceAccount
   name: test-user
