@@ -10,7 +10,6 @@ COPY .env /.env
 RUN yum update -y \
     && yum install dnf-plugins-core -y \
     && yum config-manager --set-enabled powertools \
-    && yum clean all \
     && yum install -y \
     epel-release \
     git \
@@ -25,7 +24,8 @@ RUN yum update -y \
     vim \
     wget \
     yum-utils \
-    zlib
+    zlib \
+    && yum clean all
 
 # Runner user
 RUN adduser -c "" --uid 1000 runner \
