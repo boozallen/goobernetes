@@ -2,7 +2,7 @@
 source /opt/bash-utils/logger.sh
 
 function wait_for_process () {
-    local max_time_wait=10
+    local max_time_wait=20
     local process_name="$1"
     local waited_sec=0
     while ! pgrep "$process_name" >/dev/null && ((waited_sec < max_time_wait)); do
@@ -12,7 +12,7 @@ function wait_for_process () {
         ((waited_sec=waited_sec+1))
         if ((waited_sec >= max_time_wait)); then
             {
-              sudo $process &
+              sudo "$process_name" &
             } || {
               return 1
             }
@@ -28,6 +28,7 @@ INFO "Waiting for processes to be running"
 processes=(dockerd)
 
 for process in "${processes[@]}"; do
+    sleep 10
     wait_for_process "$process"
     if [ $? -ne 0 ]; then
         ERROR "$process is not running after max time"
