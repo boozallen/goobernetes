@@ -39,6 +39,8 @@ The next part of this solution is the Docker images used as runners.  These are 
 
 The Dockerfiles and all of the other software needed for each are in the [images](images) directory.  The extra scripts and such provide additional software, install and configure the runner agent to automatically join the enterprise worker pool, configure logging, etc.  In general, software that isn't commonly available in that distribution's default repositories is controlled by a shell script in the [software](images/software) directory.
 
+:information_source:  Looking to add a tool cache to the image so the team isn't downloading the same thing a million times?  Look for directions [here](docs/TOOL-CACHE.md)!
+
 The most visible part of the configuration for deploying these runners is in the [deployments](deployments) directory.  This directory only contains YAML files used to define the runner deployment.  Things you'll find here are how much resources are allotted to any given worker, how the controller scales that deployment, etc.
 
 Lastly, the [workflows](github/workflows) directory provides the CI/CD pipeline for building, testing, and deploying the images.  Of course we're going to use GitHub to build GitHub! :tada:
