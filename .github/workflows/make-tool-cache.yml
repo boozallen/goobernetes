@@ -1,0 +1,90 @@
+name: Upload tool cache
+
+on:
+  workflow_dispatch:
+
+jobs:
+  upload_tool_cache:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clear any existing tool cache
+        run: |
+          mv "${{ runner.tool_cache }}" "${{ runner.tool_cache }}.old"
+          mkdir -p "${{ runner.tool_cache }}"
+
+      - name: Setup Node 10
+        uses: actions/setup-node@v2
+        with:
+          node-version: '10.x'
+      
+      - name: Setup Node 12
+        uses: actions/setup-node@v2
+        with:
+          node-version: '12.x'
+
+      - name: Setup Node 14
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14.x'
+
+      - name: Setup Node 16
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16.x'
+
+      - name: Setup Python 2.7
+        uses: actions/setup-python@v2
+        with:
+          python-version: '2.7'
+
+      - name: Setup Python 3.6
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.6'
+
+      - name: Setup Python 3.7
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.7'
+
+      - name: Setup Python 3.8
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'
+
+      - name: Setup Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+
+      - name: Setup Python 3.10
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.10'
+          
+      - name: Setup Go 1.15
+        uses: actions/setup-go@v2
+        with:
+          go-version: '1.15'
+
+      - name: Setup Go 1.16
+        uses: actions/setup-go@v2
+        with:
+          go-version: '1.16'
+
+      - name: Setup Go 1.17
+        uses: actions/setup-go@v2
+        with:
+          go-version: '1.17'
+
+      - name: Archive tool cache
+        run: |
+          cd "${{ runner.tool_cache }}"
+          tar -czf tool_cache.tar.gz *
+
+      - name: Upload tool cache artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: tool_cache.tar.gz
+          path: ${{runner.tool_cache}}/tool_cache.tar.gz
