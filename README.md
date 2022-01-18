@@ -1,5 +1,7 @@
 # Goobernetes - the Kubernetes cluster of GitHub Actions runners
 
+[![awesome-runners](https://img.shields.io/badge/listed%20on-awesome--runners-blue.svg)](https://github.com/jonico/awesome-runners)
+
 This is the repo that contains all the code and a walkthrough of building for an on-premises auto-scaling Kubernetes cluster of GitHub Actions Runners.
 
 ## But why though
